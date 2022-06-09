@@ -76,7 +76,6 @@ const server = http.createServer((req, res) => {
 })
 
 const PORT = process.env.PORT || 3000
-gitl
 server.listen(PORT, () => {
     console.log(`Server has been started on ${chalk.blue(PORT)}...`)
 })
