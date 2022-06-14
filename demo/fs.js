@@ -34,20 +34,47 @@ const path = require('path')
 //     })
 // })
 
-
 /** Чтение файлов **/
 
-const filePath = path.join(__dirname, 'test', 'text.txt')
+// const filePath = path.join(__dirname, 'test', 'text.txt')
+//
+// fs.readFile(filePath, 'utf-8', (err, content) => {
+//     if (err) {
+//         throw err
+//     }
+//
+//     console.log('Content: ', content)
+//
+//     // const data = Buffer.from(content)
+//     // console.log('Content: ', data.toString())
+//
+//
+// })
 
-fs.readFile(filePath, 'utf-8', (err, content) => {
+/** Чтение и запись файлов **/
+
+const baseFilePath = path.join(__dirname, 'test', 'text.txt')
+const directoryPatch = path.join(__dirname, 'test', 'files')
+const filePath = path.join(__dirname, 'test', 'files', 'text2.txt')
+
+fs.readFile(baseFilePath, 'utf-8', (err, content) => {
     if (err) {
         throw err
     }
-
-    console.log('Content: ', content)
-
-    // const data = Buffer.from(content)
-    // console.log('Content: ', data.toString())
-
-
 })
+
+setTimeout(() => {
+    if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, () => {})
+        console.log(filePath, 111)
+    }
+}, 4000)
+
+setTimeout(() => {
+    if (fs.existsSync(directoryPatch)) {
+        fs.rmdir(directoryPatch, () => {})
+        console.log(directoryPatch, 222)
+    }
+
+}, 6000)
+
