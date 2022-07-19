@@ -19,6 +19,10 @@ app.get('/contacts', (req, res) => {
     res.sendFile(createPath('contacts'))
 })
 
+app.get('/about-us', (req, res) => {
+    res.redirect('contacts')
+})
+
 app.use((req, res) => {
     // res.statusCode = 404
     res
