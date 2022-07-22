@@ -1,12 +1,19 @@
 const express = require('express')
 const patch = require('path')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
 
 const app = express()
 
 app.set('view engine', 'ejs')
 
 const PORT = 3000
+const db = 'mongodb+srv://Ensiferum201:2KQwnxmGkkTWHjTw@cluster0.8538lbx.mongodb.net/node-blog?retryWrites=true&w=majority'
+
+mongoose
+    .connect(db)
+    .then((res) => console.log('Connected to DB'))
+    .catch((err) => console.log(err))
 
 const createPath = (page) => patch.resolve(__dirname, 'ejs-views', `${page}.ejs`)
 
@@ -16,6 +23,8 @@ app.listen(PORT, (error) => {
 
 // middleware
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+
+app.use(express.urlencoded({ extended: false }))
 
 app.use(express.static('styles'))
 
@@ -39,7 +48,7 @@ app.get('/posts/:id', (req, res) => {
     const title = 'Post'
     const post = {
         id: '1',
-        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
+        text: '111 Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
         title: 'Post title',
         date: '05.05.2021',
         author: 'Yauhen'
@@ -52,13 +61,25 @@ app.get('/posts', (req, res) => {
     const posts = [
         {
             id: '1',
-            text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
+            text: '222 Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem. Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente quidem provident, dolores, vero laboriosam nemo mollitia impedit unde fugit sint eveniet, minima odio ipsum sed recusandae aut iste aspernatur dolorem.',
             title: 'Post title',
             date: '05.05.2021',
             author: 'Yauhen'
         }
     ]
     res.render(createPath('posts'), { title, posts })
+})
+
+app.post('/add-post', (req, res) => {
+    const { title, author, text } = req.body
+    const post = {
+        id: new Date(),
+        date: (new Date()).toLocaleDateString(),
+        title,
+        author,
+        text
+    }
+    res.render(createPath('post'), { post, title })
 })
 
 app.get('/add-post', (req, res) => {
